@@ -9,9 +9,9 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
   web:
     build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
     volumes:
       - .:/code
@@ -19,3 +19,9 @@ services:
       - "8000:8000"
     depends_on:
       - db
+
+    command: bash -c " while !</dev/tcp/db/5432; do sleep 1; done; python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+
+volumes:
+  database:
